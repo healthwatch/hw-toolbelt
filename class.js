@@ -51,6 +51,21 @@ __PROPERTIES__
       .replace(/__CLASS__/g, this.name)
       .replace('__PROPERTIES__', p);
   }
+  toSchemaString() {
+    var cols = '';
+    this.properties.forEach(function(e, i) {
+      if (i > 0) {
+        cols += ',\n';
+      }
+      cols += '  ' + e.name + ' VARCHAR(255)';
+    });
+    return `CREATE TABLE __CLASS__(
+  __CLASS__ID INTEGER NOT NULL PRIMARY KEY IDENTITY,
+__COLS__
+)`
+      .replace(/__CLASS__/g, this.name)
+      .replace('__COLS__', cols);
+  }
   toRepoString() {
     var cols = '';
     var vals = '';
@@ -58,20 +73,20 @@ __PROPERTIES__
     var propVals = '';
     var colVals = '';
     var className = toCamelCase(this.name);
-    var i = 0;
+    var properties = this.properties;
     this.properties.forEach(function(e, i) {
-      cols += e.name;
-      vals += '@' + e.name;
-      params += 'new SqlParameter("@' + e.name + '", ' + className + '.' + e.name + ')';
-      propVals += '                    ' + e.name + ' = DbHelper.GetString(rs, ' + (i + 1) + ')';
-      colVals += e.name + ' = @' + e.name;
-      if (i++ == 0) {
+      if (i > 0) {
         cols += ', ';
         vals += ', ';
         params += ', ';
         propVals += ',\n';
         colVals += ', ';
       }
+      cols += e.name;
+      vals += '@' + e.name;
+      params += 'new SqlParameter("@' + e.name + '", ' + className + '.' + e.name + ')';
+      propVals += '                    ' + e.name + ' = DbHelper.GetString(rs, ' + (i + 1) + ')';
+      colVals += e.name + ' = @' + e.name;
     });
     return `using System;
 using System.Collections.Generic;

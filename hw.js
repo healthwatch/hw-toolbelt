@@ -5,6 +5,7 @@ if (argv.length != 4) {
   console.log(`usage: node hw [command] [param]
 sample: node hw generate "User|Username,Password"`);
 } else {
-  generator.createModel(argv[3]);
-  generator.createRepo(argv[3]);
+  generator.createModel(argv[3], true);
+  generator.createSchema(argv[3], true);
+  generator.createRepo(argv[3], true);
 }

@@ -9,6 +9,13 @@ exports.createModel = function(command, overwrite = false) {
   writeFile(dir, dir + '/' + filename, c.toString(), overwrite);
 }
 
+exports.createSchema = function(command, overwrite = false) {
+  var c = Class.parse(command);
+  var dir = 'Repositories';
+  var filename = c.name + '.sql';
+  writeFile(dir, dir + '/' + filename, c.toSchemaString(), overwrite);
+}
+
 exports.createRepo = function(command, overwrite = false) {
   var c = Class.parse(command);
   var dir = 'Repositories/Sql';
